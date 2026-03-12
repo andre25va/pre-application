@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Pre-Application — Andre Vargas Team</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0f1f3d;
+      --navy2: #1a3260;
+      --gold: #d4a843;
+      --gold2: #b8902e;
+      --bg: #f0f4ff;
+      --white: #ffffff;
+      --gray-100: #f3f4f8;
+      --gray-200: #e4e7ef;
+      --gray-400: #9aa0b4;
+      --gray-600: #555e78;
+      --gray-800: #2a2f42;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(15,31,61,.10);
+      --shadow-lg: 0 8px 40px rgba(15,31,61,.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--gray-800);
+    }
+
+    /* ─── LANG TOGGLE ─── */
+    .lang-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 100;
+      display: flex;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 50px;
+      overflow: hidden;
+    }
+    .lang-btn {
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: inherit;
+      color: rgba(255,255,255,0.6);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all .18s;
+      letter-spacing: .04em;
+    }
+    .lang-btn.active {
+      background: var(--gold);
+      color: var(--navy);
+      border-radius: 50px;
+    }
+
+    /* ─── TOP HERO BANNER ─── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+      padding: 28px 20px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 40px;
+      background: var(--bg);
+      border-radius: 40px 40px 0 0;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(212,168,67,.2);
+      border: 1px solid rgba(212,168,67,.4);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 50px;
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-size: clamp(22px, 5vw, 30px);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .hero p {
+      color: rgba(255,255,255,.6);
+      font-size: 14px;
+    }
+
+    /* ─── PROGRESS PILL ─── */
+    .progress-wrap {
+      max-width: 520px;
+      margin: -20px auto 0;
+      padding: 0 16px;
+      position: relative;
+      z-index: 10;
+    }
+    .progress-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 18px 20px;
+    }
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .progress-label { font-size: 13px; font-weight: 600; color: var(--gray-600); }
+    .progress-pct { font-size: 13px; font-weight: 700; color: var(--gold); }
+    .progress-track {
+      height: 6px;
+      background: var(--gray-200);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), #f0c46a);
+      border-radius: 99px;
+      transition: width .4s cubic-bezier(.4,0,.2,1);
+    }
+    .step-dots {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .step-dot-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .step-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+      background: var(--gray-200);
+      color: var(--gray-400);
+      transition: all .3s;
+    }
+    .step-dot.active { background: var(--navy); color: #fff; }
+    .step-dot.done { background: var(--gold); color: #fff; }
+    .step-dot-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-align: center;
+    }
+    .step-dot.active ~ .step-dot-label,
+    .step-dot-wrap.active .step-dot-label { color: var(--navy); }
+    .step-dot-wrap.done .step-dot-label { color: var(--gold2); }
+
+    /* ─── FORM CONTAINER ─── */
+    .form-wrap {
+      max-width: 520px;
+      margin: 20px auto 40px;
+      padding: 0 16px;
+    }
+
+    /* ─── STEP CARD ─── */
+    .step { display: none; }
+    .step.active { display: block; animation: slideIn .3s ease; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-header { margin-bottom: 24px; }
+    .card-step-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .card-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--gray-400);
+      margin-top: 4px;
+    }
+
+    /* ─── FORM FIELDS ─── */
+    .field { margin-bottom: 20px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .field-label .req { color: #e05454; margin-left: 2px; }
+
+    .field-input {
+      width: 100%;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--gray-800);
+      background: var(--gray-100);
+      outline: none;
+      transition: all .2s;
+      -webkit-appearance: none;
+    }
+    .field-input::placeholder { color: var(--gray-400); }
+    .field-input:focus {
+      border-color: var(--gold);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(212,168,67,.12);
+    }
+    textarea.field-input { resize: none; }
+
+    /* ─── OPTION BUTTONS ─── */
+    .options-grid {
+      display: grid;
+      gap: 8px;
+    }
+    .options-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+    .options-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+    .sr-only { position: absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+
+    .opt-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 11px 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-600);
+      background: var(--gray-100);
+      text-align: center;
+      line-height: 1.3;
+      transition: all .18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .opt-label:hover { border-color: var(--gold); background: #fff; }
+    input:checked + .opt-label {
+      border-color: var(--gold);
+      background: #fff8e8;
+      color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(212,168,67,.12);
+    }
+
+    /* ─── HIGHLIGHT BOX ─── */
+    .highlight-box {
+      background: #fff8e8;
+      border: 1.5px solid rgba(212,168,67,.3);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+    .highlight-box.blue {
+      background: #eff5ff;
+      border-color: rgba(76,110,219,.3);
+      border-left-color: #4c6edb;
+    }
+    .highlight-box .field-label { margin-bottom: 10px; }
+
+    /* ─── CONDITIONAL ─── */
+    .conditional { display: none; margin-top: 10px; }
+    .conditional.visible { display: block; animation: fadeIn .2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ─── NAV BUTTONS ─── */
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .nav-row.end { justify-content: flex-end; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 13px 22px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-primary {
+      background: var(--navy);
+      color: #fff;
+      flex: 1;
+      max-width: 200px;
+    }
+    .btn-primary:hover { background: var(--navy2); }
+    .btn-back {
+      background: transparent;
+      color: var(--gray-600);
+      border: 1.5px solid var(--gray-200);
+      flex: 1;
+      max-width: 130px;
+    }
+    .btn-back:hover { background: var(--gray-100); }
+    .btn-submit {
+      background: linear-gradient(135deg, var(--gold), #f0c46a);
+      color: var(--navy);
+      flex: 1;
+      max-width: 220px;
+    }
+    .btn-submit:hover { background: linear-gradient(135deg, var(--gold2), var(--gold)); }
+    .btn-download {
+      width: 100%;
+      background: linear-gradient(135deg, #1a7a5e, #22a37c);
+      color: #fff;
+      border-radius: var(--radius-sm);
+      padding: 15px 24px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all .18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-download:hover { background: linear-gradient(135deg, #156650, #1a8a67); }
+    .btn-download:active { transform: scale(.98); }
+
+    /* ─── SUCCESS SCREEN ─── */
+    #step-success .card { text-align: center; padding: 32px 24px; }
+    .success-icon {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, #d4edda, #a8e6cf);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .success-icon svg { width: 36px; height: 36px; color: #1a7a5e; }
+    .success-title { font-size: 24px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+    .success-sub { font-size: 14px; color: var(--gray-400); margin-bottom: 28px; line-height: 1.5; }
+    .success-footer {
+      margin-top: 24px;
+      background: var(--navy);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      text-align: center;
+    }
+    .success-footer p { font-size: 13px; color: rgba(255,255,255,.6); margin-top: 4px; }
+    .success-footer strong { font-size: 15px; color: #fff; }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      height: 1px;
+      background: var(--gray-200);
+      margin: 20px 0;
+    }
+
+    /* ─── FOOTER ─── */
+    .page-footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--gray-400);
+      padding: 0 16px 32px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ─── MOBILE TWEAKS ─── */
+    @media (max-width: 380px) {
+      .options-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+      .hero h1 { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Banner -->
+  <div class="hero" id="hero-block">
+    <!-- Language Toggle -->
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')" id="btn-en">EN</button>
+      <button class="lang-btn" onclick="setLang('es')" id="btn-es">ES</button>
+    </div>
+    <div class="hero-badge">Andre Vargas Team</div>
+    <h1>Pre-Application</h1>
+    <p data-i18n="hero_sub">Buyer Pre-Qualification Form</p>
+  </div>
+
+  <!-- Progress Tracker -->
+  <div class="progress-wrap" id="progress-block">
+    <div class="progress-card">
+      <div class="progress-top">
+        <span class="progress-label" id="prog-label"></span>
+        <span class="progress-pct" id="prog-pct">25%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-bar" id="prog-bar" style="width:25%"></div>
+      </div>
+      <div class="step-dots">
+        <div class="step-dot-wrap active" id="wrap-1">
+          <div class="step-dot active" id="dot-1">1</div>
+          <div class="step-dot-label" data-i18n="dot1">Info</div>
+        </div>
+        <div class="step-dot-wrap" id="wrap-2">
+          <div class="step-dot" id="dot-2">2</div>
+          <div class="step-dot-label" data-i18n="dot2">Property</div>
+        </div>
+        <div class="step-dot-wrap" id="wrap-3">
+          <div class="step-dot" id="dot-3">3</div>
+          <div class="step-dot-label" data-i18n="dot3">Employment</div>
+        </div>
+        <div class="step-dot-wrap" id="wrap-4">
+          <div class="step-dot" id="dot-4">4</div>
+          <div class="step-dot-label" data-i18n="dot4">Final</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form id="igas-form" onsubmit="return false;" class="form-wrap">
+
+    <!-- ═══ STEP 1: CONTACT INFO ═══ -->
+    <div class="step active" id="step-1">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-step-tag" data-i18n="s1_tag">Step 1 of 4</div>
+          <div class="card-title" data-i18n="s1_title">Contact Information</div>
+          <div class="card-subtitle" data-i18n="s1_sub">Let's start with your basic details</div>
+        </div>
+
+        <div class="field">
+          <label class="field-label"><span data-i18n="l_buyer_name">Buyer's Full Name</span> <span class="req">*</span></label>
+          <input class="field-input" type="text" name="buyerName" data-i18n-placeholder="ph_full_name" placeholder="John Doe" required />
+        </div>
+        <div class="field">
+          <label class="field-label"><span data-i18n="l_email">Email Address</span> <span class="req">*</span></label>
+          <input class="field-input" type="email" name="buyerEmail" data-i18n-placeholder="ph_email" placeholder="john@email.com" required />
+        </div>
+        <div class="field">
+          <label class="field-label" data-i18n="l_phone">Phone Number</label>
+          <input class="field-input" type="tel" name="phoneNumber" placeholder="(555) 123-4567" />
+        </div>
+        <div class="field">
+          <label class="field-label" data-i18n="l_agent">Agent's Name</label>
+          <input class="field-input" type="text" name="agentName" data-i18n-placeholder="ph_agent" placeholder="Your agent's name" />
+        </div>
+      </div>
+
+      <div class="nav-row end">
+        <button type="button" onclick="nextStep()" class="btn btn-primary">
+          <span data-i18n="btn_continue">Continue</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 2: PROPERTY & FINANCING ═══ -->
+    <div class="step" id="step-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-step-tag" data-i18n="s2_tag">Step 2 of 4</div>
+          <div class="card-title" data-i18n="s2_title">Property & Financing</div>
+          <div class="card-subtitle" data-i18n="s2_sub">Your property preferences and funding details</div>
+        </div>
+
+        <!-- Q1 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q1_label">Are you buying with an ITIN or SSN?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q1a" name="q1_itin_or_ssn" value="ITIN" class="sr-only"><label for="q1a" class="opt-label">🪪 ITIN</label></div>
+            <div><input type="radio" id="q1b" name="q1_itin_or_ssn" value="SSN" class="sr-only"><label for="q1b" class="opt-label">🔒 SSN</label></div>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="field">
+          <label class="field-label"><span data-i18n="q2_label">What properties are you interested in?</span> <span style="font-weight:400;color:var(--gray-400)" data-i18n="q2_note">(select all that apply)</span></label>
+          <div class="options-grid cols-2">
+            <div><input type="checkbox" id="q2a" name="q2_property_types" value="Condo" class="sr-only"><label for="q2a" class="opt-label">🏢 <span data-i18n="opt_condo">Condo</span></label></div>
+            <div><input type="checkbox" id="q2b" name="q2_property_types" value="Town House" class="sr-only"><label for="q2b" class="opt-label">🏘️ <span data-i18n="opt_townhouse">Town House</span></label></div>
+            <div><input type="checkbox" id="q2c" name="q2_property_types" value="Single Family" class="sr-only"><label for="q2c" class="opt-label">🏠 <span data-i18n="opt_single">Single Family</span></label></div>
+            <div><input type="checkbox" id="q2d" name="q2_property_types" value="Multi Family" class="sr-only"><label for="q2d" class="opt-label">🏗️ <span data-i18n="opt_multi">Multi Family</span></label></div>
+            <div style="grid-column: span 2"><input type="checkbox" id="q2e" name="q2_property_types" value="Not Sure" class="sr-only"><label for="q2e" class="opt-label">🤷 <span data-i18n="opt_notsure">Not Sure (IDK)</span></label></div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Q3 -->
+        <div class="highlight-box">
+          <label class="field-label" data-i18n="q3_label">⚠️ Do you understand that you <strong>can't buy anything on credit</strong> or run your credit until you have closed on your house and been handed keys?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q3a" name="q3_no_credit" value="Yes, I understand" class="sr-only"><label for="q3a" class="opt-label"><span data-i18n="opt_yes_understand">✓ Yes, I understand</span></label></div>
+            <div><input type="radio" id="q3b" name="q3_no_credit" value="No" class="sr-only"><label for="q3b" class="opt-label"><span data-i18n="opt_no">No</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q4_label">Has the money you'll use to buy the house been in your own bank account for <strong>more than 2 months</strong>?</label>
+          <div class="options-grid cols-3">
+            <div><input type="radio" id="q4a" name="q4_funds_in_account" value="Yes" class="sr-only"><label for="q4a" class="opt-label"><span data-i18n="opt_yes">Yes</span></label></div>
+            <div><input type="radio" id="q4b" name="q4_funds_in_account" value="No" class="sr-only"><label for="q4b" class="opt-label"><span data-i18n="opt_no2">No</span></label></div>
+            <div><input type="radio" id="q4c" name="q4_funds_in_account" value="Not Sure" class="sr-only"><label for="q4c" class="opt-label"><span data-i18n="opt_notsure2">Not Sure</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q5_label">Do you plan on using saved cash that is <strong>not</strong> in your bank account?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q5a" name="q5_cash_not_in_bank" value="Yes" class="sr-only"><label for="q5a" class="opt-label"><span data-i18n="opt_yes3">Yes</span></label></div>
+            <div><input type="radio" id="q5b" name="q5_cash_not_in_bank" value="No" class="sr-only"><label for="q5b" class="opt-label"><span data-i18n="opt_no3">No</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q6_label">Are you planning on getting a <strong>gift from a family member</strong> toward the down payment?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q6a" name="q6_gift_down_payment" value="Yes" class="sr-only"><label for="q6a" class="opt-label"><span data-i18n="opt_yes4">Yes</span></label></div>
+            <div><input type="radio" id="q6b" name="q6_gift_down_payment" value="No" class="sr-only"><label for="q6b" class="opt-label"><span data-i18n="opt_no4">No</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q7_label">Do you have <strong>student loans</strong> you are paying or will be paying?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q7a" name="q7_student_loans" value="Yes" class="sr-only" onchange="toggleCond('q8-cond','show')"><label for="q7a" class="opt-label"><span data-i18n="opt_yes5">Yes</span></label></div>
+            <div><input type="radio" id="q7b" name="q7_student_loans" value="No" class="sr-only" onchange="toggleCond('q8-cond','hide')"><label for="q7b" class="opt-label"><span data-i18n="opt_no5">No</span></label></div>
+          </div>
+          <div id="q8-cond" class="conditional">
+            <div style="margin-top:14px;">
+              <label class="field-label" data-i18n="q8_label">Are your student loans being <strong>deferred or moved</strong> by the lender?</label>
+              <div class="options-grid cols-3">
+                <div><input type="radio" id="q8a" name="q8_loans_deferred" value="Yes" class="sr-only"><label for="q8a" class="opt-label"><span data-i18n="opt_yes6">Yes</span></label></div>
+                <div><input type="radio" id="q8b" name="q8_loans_deferred" value="No" class="sr-only"><label for="q8b" class="opt-label"><span data-i18n="opt_no6">No</span></label></div>
+                <div><input type="radio" id="q8c" name="q8_loans_deferred" value="N/A" class="sr-only"><label for="q8c" class="opt-label">N/A</label></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q9_label">Do you have <strong>co-signers</strong> you will or want to use in the buying process?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q9a" name="q9_co_signers" value="Yes" class="sr-only"><label for="q9a" class="opt-label"><span data-i18n="opt_yes7">Yes</span></label></div>
+            <div><input type="radio" id="q9b" name="q9_co_signers" value="No" class="sr-only"><label for="q9b" class="opt-label"><span data-i18n="opt_no7">No</span></label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button type="button" onclick="prevStep()" class="btn btn-back">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          <span data-i18n="btn_back">Back</span>
+        </button>
+        <button type="button" onclick="nextStep()" class="btn btn-primary">
+          <span data-i18n="btn_continue2">Continue</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 3: EMPLOYMENT & HISTORY ═══ -->
+    <div class="step" id="step-3">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-step-tag" data-i18n="s3_tag">Step 3 of 4</div>
+          <div class="card-title" data-i18n="s3_title">Employment & History</div>
+          <div class="card-subtitle" data-i18n="s3_sub">Work history, pay type, and financial background</div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q10_label">How long have you worked at your current employer?</label>
+          <input class="field-input" type="text" name="q10_employer_tenure" data-i18n-placeholder="ph_tenure" placeholder="e.g. 3 years, 8 months" />
+        </div>
+
+        <!-- Q11 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q11_label">Are you working right now?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q11a" name="q11_working_now" value="Yes" class="sr-only"><label for="q11a" class="opt-label">✅ <span data-i18n="opt_yes8">Yes</span></label></div>
+            <div><input type="radio" id="q11b" name="q11_working_now" value="No" class="sr-only"><label for="q11b" class="opt-label"><span data-i18n="opt_no8">No</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q12 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q12_label">Are you full time or part time?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q12a" name="q12_employment_type" value="Full Time" class="sr-only"><label for="q12a" class="opt-label">⏰ <span data-i18n="opt_fulltime">Full Time</span></label></div>
+            <div><input type="radio" id="q12b" name="q12_employment_type" value="Part Time" class="sr-only"><label for="q12b" class="opt-label">🕐 <span data-i18n="opt_parttime">Part Time</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q13 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q13_label">Have you ever had a <strong>bankruptcy</strong>?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q13a" name="q13_bankruptcy" value="Yes" class="sr-only" onchange="toggleCond('q13-cond','show')"><label for="q13a" class="opt-label"><span data-i18n="opt_yes9">Yes</span></label></div>
+            <div><input type="radio" id="q13b" name="q13_bankruptcy" value="No" class="sr-only" onchange="toggleCond('q13-cond','hide')"><label for="q13b" class="opt-label"><span data-i18n="opt_no9">No</span></label></div>
+          </div>
+          <div id="q13-cond" class="conditional">
+            <div style="margin-top:12px;">
+              <input class="field-input" type="text" name="q13_bankruptcy_when" data-i18n-placeholder="ph_bankruptcy" placeholder="When? (e.g. 2019)" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Q16 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q16_label">Do you get paid <strong>W2 or 1099</strong>?</label>
+          <div class="options-grid cols-3">
+            <div><input type="radio" id="q16a" name="q16_pay_type" value="W2" class="sr-only"><label for="q16a" class="opt-label">W2</label></div>
+            <div><input type="radio" id="q16b" name="q16_pay_type" value="1099" class="sr-only"><label for="q16b" class="opt-label">1099</label></div>
+            <div><input type="radio" id="q16c" name="q16_pay_type" value="Both" class="sr-only"><label for="q16c" class="opt-label"><span data-i18n="opt_both">Both</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q20 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q20_label">Are you a <strong>teacher</strong> and do you collect paychecks in the summer?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q20a" name="q20_teacher" value="Yes" class="sr-only"><label for="q20a" class="opt-label"><span data-i18n="opt_yes10">Yes</span></label></div>
+            <div><input type="radio" id="q20b" name="q20_teacher" value="No" class="sr-only"><label for="q20b" class="opt-label"><span data-i18n="opt_no10">No</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q17 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q17_label">Do you have access to your <strong>online banking</strong>?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q17a" name="q17_online_banking" value="Yes" class="sr-only"><label for="q17a" class="opt-label">🏦 <span data-i18n="opt_yes11">Yes</span></label></div>
+            <div><input type="radio" id="q17b" name="q17_online_banking" value="No" class="sr-only"><label for="q17b" class="opt-label"><span data-i18n="opt_no11">No</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q18 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q18_label">Do you know the number and/or email to your <strong>HR department</strong>?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q18a" name="q18_hr_contact" value="Yes" class="sr-only" onchange="toggleCond('q18-cond','show')"><label for="q18a" class="opt-label"><span data-i18n="opt_yes12">Yes</span></label></div>
+            <div><input type="radio" id="q18b" name="q18_hr_contact" value="No" class="sr-only" onchange="toggleCond('q18-cond','hide')"><label for="q18b" class="opt-label"><span data-i18n="opt_no12">No</span></label></div>
+          </div>
+          <div id="q18-cond" class="conditional">
+            <div style="margin-top:12px;">
+              <input class="field-input" type="text" name="q18_hr_contact_info" data-i18n-placeholder="ph_hr" placeholder="HR phone number and/or email address" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button type="button" onclick="prevStep()" class="btn btn-back">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          <span data-i18n="btn_back2">Back</span>
+        </button>
+        <button type="button" onclick="nextStep()" class="btn btn-primary">
+          <span data-i18n="btn_continue3">Continue</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 4: ACKNOWLEDGMENTS ═══ -->
+    <div class="step" id="step-4">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-step-tag" data-i18n="s4_tag">Step 4 of 4</div>
+          <div class="card-title" data-i18n="s4_title">Acknowledgments</div>
+          <div class="card-subtitle" data-i18n="s4_sub">Almost done! A few important acknowledgments</div>
+        </div>
+
+        <!-- Q14 -->
+        <div class="highlight-box blue">
+          <label class="field-label" data-i18n="q14_label">💡 Do you understand that <strong>not everyone qualifies</strong> for down payment assistance?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q14a" name="q14_dpa_understanding" value="Yes, I understand" class="sr-only"><label for="q14a" class="opt-label"><span data-i18n="opt_yes_und2">✓ Yes, I understand</span></label></div>
+            <div><input type="radio" id="q14b" name="q14_dpa_understanding" value="No" class="sr-only"><label for="q14b" class="opt-label"><span data-i18n="opt_no13">No</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q15 -->
+        <div class="highlight-box blue">
+          <label class="field-label" data-i18n="q15_label">💡 Do you understand all the <strong>pros and cons of down payment assistance</strong>?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q15a" name="q15_dpa_pros_cons" value="Yes, I understand" class="sr-only"><label for="q15a" class="opt-label"><span data-i18n="opt_yes_und3">✓ Yes, I understand</span></label></div>
+            <div><input type="radio" id="q15b" name="q15_dpa_pros_cons" value="No" class="sr-only"><label for="q15b" class="opt-label"><span data-i18n="opt_no14">No</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q19 -->
+        <div class="highlight-box">
+          <label class="field-label" data-i18n="q19_label">⚠️ Do you understand that you <strong>cannot move large cash in or out</strong> of your bank accounts during the buying process without talking to the lender?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q19a" name="q19_cash_movement" value="Yes, I understand" class="sr-only"><label for="q19a" class="opt-label"><span data-i18n="opt_yes_und4">✓ Yes, I understand</span></label></div>
+            <div><input type="radio" id="q19b" name="q19_cash_movement" value="No" class="sr-only"><label for="q19b" class="opt-label"><span data-i18n="opt_no15">No</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q21 -->
+        <div class="highlight-box blue">
+          <label class="field-label" data-i18n="q21_label">📊 Do you understand that <strong>rates can change at any time</strong> and everything is based off your credit or credit from others on the loan?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q21a" name="q21_rate_change" value="Yes, I understand" class="sr-only"><label for="q21a" class="opt-label"><span data-i18n="opt_yes_und5">✓ Yes, I understand</span></label></div>
+            <div><input type="radio" id="q21b" name="q21_rate_change" value="No" class="sr-only"><label for="q21b" class="opt-label"><span data-i18n="opt_no16">No</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q22 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q22_label">Who will be on the <strong>title</strong> with you?</label>
+          <input class="field-input" type="text" name="q22_title_with" data-i18n-placeholder="ph_title" placeholder="e.g. Spouse, Partner, No one" />
+        </div>
+
+        <!-- Q23 -->
+        <div class="highlight-box">
+          <label class="field-label" data-i18n="q23_label">📋 Do you understand that your <strong>first disclosure from the lender will always show extremely high numbers</strong> because no credits have been factored in and all those numbers are estimates?</label>
+          <div class="options-grid cols-2">
+            <div><input type="radio" id="q23a" name="q23_disclosure" value="Yes, I understand" class="sr-only"><label for="q23a" class="opt-label"><span data-i18n="opt_yes_und6">✓ Yes, I understand</span></label></div>
+            <div><input type="radio" id="q23b" name="q23_disclosure" value="No" class="sr-only"><label for="q23b" class="opt-label"><span data-i18n="opt_no17">No</span></label></div>
+          </div>
+        </div>
+
+        <!-- Q24 -->
+        <div class="field">
+          <label class="field-label" data-i18n="q24_label">Is there anything that could <strong>affect your ability to get a loan</strong>?</label>
+          <p style="font-size:12px;color:var(--gray-400);margin-bottom:8px;margin-top:-4px;" data-i18n="q24_note">If so, let the lender know — we're on your team and our goal is to get you into your home! 🏠</p>
+          <textarea class="field-input" name="q24_additional_info" rows="4" data-i18n-placeholder="ph_additional" placeholder="Share any additional information here..."></textarea>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button type="button" onclick="prevStep()" class="btn btn-back">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          <span data-i18n="btn_back3">Back</span>
+        </button>
+        <button type="button" onclick="submitForm()" id="submit-btn" class="btn btn-submit">
+          <span data-i18n="btn_submit">Complete Application</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ SUCCESS ═══ -->
+    <div class="step" id="step-success">
+      <div class="card">
+        <div class="success-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div class="success-title" data-i18n="success_title">Application Complete! 🎉</div>
+        <p class="success-sub" data-i18n="success_sub">Thank you for completing your Pre-Application.<br>Download your personalized PDF copy below.</p>
+
+        <button onclick="generatePDF()" class="btn-download">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span data-i18n="btn_download">Download PDF Copy</span>
+        </button>
+        <p style="font-size:12px;color:var(--gray-400);margin-top:10px;" data-i18n="download_note">Your application will save as a PDF file</p>
+
+        <div class="success-footer">
+          <strong data-i18n="footer_msg">We are part of your team 🏠</strong>
+          <p data-i18n="footer_sub">Our goal is to see you get into your new home!</p>
+          <p style="margin-top:8px;font-size:11px;">Andre Vargas Team &bull; info@andrevargasteam.com</p>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+  <div class="page-footer" id="page-footer">
+    <span data-i18n="page_footer">Andre Vargas Team &bull; Pre-Application &bull; All information is kept confidential</span>
+  </div>
+
+  <script>
+    /* ─── TRANSLATIONS ─── */
+    const T = {
+      en: {
+        hero_sub: 'Buyer Pre-Qualification Form',
+        dot1: 'Info', dot2: 'Property', dot3: 'Employment', dot4: 'Final',
+        s1_tag: 'Step 1 of 4', s1_title: 'Contact Information', s1_sub: "Let's start with your basic details",
+        s2_tag: 'Step 2 of 4', s2_title: 'Property & Financing', s2_sub: 'Your property preferences and funding details',
+        s3_tag: 'Step 3 of 4', s3_title: 'Employment & History', s3_sub: 'Work history, pay type, and financial background',
+        s4_tag: 'Step 4 of 4', s4_title: 'Acknowledgments', s4_sub: 'Almost done! A few important acknowledgments',
+        l_buyer_name: "Buyer's Full Name", l_email: 'Email Address', l_phone: 'Phone Number', l_agent: "Agent's Name",
+        ph_full_name: 'John Doe', ph_email: 'john@email.com', ph_agent: "Your agent's name",
+        q1_label: 'Are you buying with an ITIN or SSN?',
+        q2_label: 'What properties are you interested in?', q2_note: '(select all that apply)',
+        opt_condo: 'Condo', opt_townhouse: 'Town House', opt_single: 'Single Family', opt_multi: 'Multi Family', opt_notsure: 'Not Sure (IDK)',
+        q3_label: "⚠️ Do you understand that you <strong>can't buy anything on credit</strong> or run your credit until you have closed on your house and been handed keys?",
+        opt_yes_understand: '✓ Yes, I understand', opt_no: 'No',
+        q4_label: "Has the money you'll use to buy the house been in your own bank account for <strong>more than 2 months</strong>?",
+        opt_yes: 'Yes', opt_no2: 'No', opt_notsure2: 'Not Sure',
+        q5_label: 'Do you plan on using saved cash that is <strong>not</strong> in your bank account?',
+        opt_yes3: 'Yes', opt_no3: 'No',
+        q6_label: 'Are you planning on getting a <strong>gift from a family member</strong> toward the down payment?',
+        opt_yes4: 'Yes', opt_no4: 'No',
+        q7_label: 'Do you have <strong>student loans</strong> you are paying or will be paying?',
+        opt_yes5: 'Yes', opt_no5: 'No',
+        q8_label: 'Are your student loans being <strong>deferred or moved</strong> by the lender?',
+        opt_yes6: 'Yes', opt_no6: 'No',
+        q9_label: 'Do you have <strong>co-signers</strong> you will or want to use in the buying process?',
+        opt_yes7: 'Yes', opt_no7: 'No',
+        q10_label: 'How long have you worked at your current employer?', ph_tenure: 'e.g. 3 years, 8 months',
+        q11_label: 'Are you working right now?', opt_yes8: 'Yes', opt_no8: 'No',
+        q12_label: 'Are you full time or part time?', opt_fulltime: 'Full Time', opt_parttime: 'Part Time',
+        q13_label: 'Have you ever had a <strong>bankruptcy</strong>?', opt_yes9: 'Yes', opt_no9: 'No', ph_bankruptcy: 'When? (e.g. 2019)',
+        q16_label: 'Do you get paid <strong>W2 or 1099</strong>?', opt_both: 'Both',
+        q20_label: 'Are you a <strong>teacher</strong> and do you collect paychecks in the summer?', opt_yes10: 'Yes', opt_no10: 'No',
+        q17_label: 'Do you have access to your <strong>online banking</strong>?', opt_yes11: 'Yes', opt_no11: 'No',
+        q18_label: 'Do you know the number and/or email to your <strong>HR department</strong>?', opt_yes12: 'Yes', opt_no12: 'No', ph_hr: 'HR phone number and/or email address',
+        q14_label: '💡 Do you understand that <strong>not everyone qualifies</strong> for down payment assistance?', opt_yes_und2: '✓ Yes, I understand', opt_no13: 'No',
+        q15_label: '💡 Do you understand all the <strong>pros and cons of down payment assistance</strong>?', opt_yes_und3: '✓ Yes, I understand', opt_no14: 'No',
+        q19_label: '⚠️ Do you understand that you <strong>cannot move large cash in or out</strong> of your bank accounts during the buying process without talking to the lender?', opt_yes_und4: '✓ Yes, I understand', opt_no15: 'No',
+        q21_label: '📊 Do you understand that <strong>rates can change at any time</strong> and everything is based off your credit or credit from others on the loan?', opt_yes_und5: '✓ Yes, I understand', opt_no16: 'No',
+        q22_label: 'Who will be on the <strong>title</strong> with you?', ph_title: 'e.g. Spouse, Partner, No one',
+        q23_label: '📋 Do you understand that your <strong>first disclosure from the lender will always show extremely high numbers</strong> because no credits have been factored in and all those numbers are estimates?', opt_yes_und6: '✓ Yes, I understand', opt_no17: 'No',
+        q24_label: 'Is there anything that could <strong>affect your ability to get a loan</strong>?',
+        q24_note: "If so, let the lender know — we're on your team and our goal is to get you into your home! 🏠",
+        ph_additional: 'Share any additional information here...',
+        btn_continue: 'Continue', btn_continue2: 'Continue', btn_continue3: 'Continue',
+        btn_back: 'Back', btn_back2: 'Back', btn_back3: 'Back',
+        btn_submit: 'Complete Application',
+        success_title: 'Application Complete! 🎉',
+        success_sub: 'Thank you for completing your Pre-Application.<br>Download your personalized PDF copy below.',
+        btn_download: 'Download PDF Copy',
+        download_note: 'Your application will save as a PDF file',
+        footer_msg: 'We are part of your team 🏠',
+        footer_sub: 'Our goal is to see you get into your new home!',
+        page_footer: 'Andre Vargas Team • Pre-Application • All information is kept confidential',
+        step_names: ['Contact Info', 'Property & Financing', 'Employment', 'Acknowledgments'],
+        step_of: 'Step',
+        step_of2: 'of',
+      },
+      es: {
+        hero_sub: 'Formulario de Pre-Calificación de Compradores',
+        dot1: 'Info', dot2: 'Propiedad', dot3: 'Empleo', dot4: 'Final',
+        s1_tag: 'Paso 1 de 4', s1_title: 'Información de Contacto', s1_sub: 'Empecemos con sus datos básicos',
+        s2_tag: 'Paso 2 de 4', s2_title: 'Propiedad y Financiamiento', s2_sub: 'Sus preferencias de propiedad y detalles de financiamiento',
+        s3_tag: 'Paso 3 de 4', s3_title: 'Empleo e Historial', s3_sub: 'Historial laboral, tipo de pago y antecedentes financieros',
+        s4_tag: 'Paso 4 de 4', s4_title: 'Reconocimientos', s4_sub: '¡Casi listo! Algunos reconocimientos importantes',
+        l_buyer_name: 'Nombre Completo del Comprador', l_email: 'Correo Electrónico', l_phone: 'Número de Teléfono', l_agent: 'Nombre del Agente',
+        ph_full_name: 'Juan García', ph_email: 'juan@correo.com', ph_agent: 'Nombre de su agente',
+        q1_label: '¿Está comprando con ITIN o SSN?',
+        q2_label: '¿Qué propiedades le interesan?', q2_note: '(seleccione todas las que apliquen)',
+        opt_condo: 'Condominio', opt_townhouse: 'Casa Adosada', opt_single: 'Casa Unifamiliar', opt_multi: 'Casa Multifamiliar', opt_notsure: 'No Estoy Seguro',
+        q3_label: '⚠️ ¿Entiende que <strong>no puede comprar nada a crédito</strong> ni consultar su crédito hasta que haya cerrado su casa y recibido las llaves?',
+        opt_yes_understand: '✓ Sí, entiendo', opt_no: 'No',
+        q4_label: '¿Ha tenido el dinero que usará para comprar la casa en su propia cuenta bancaria por <strong>más de 2 meses</strong>?',
+        opt_yes: 'Sí', opt_no2: 'No', opt_notsure2: 'No Estoy Seguro',
+        q5_label: '¿Planea usar efectivo ahorrado que <strong>no</strong> está en su cuenta bancaria?',
+        opt_yes3: 'Sí', opt_no3: 'No',
+        q6_label: '¿Planea recibir un <strong>regalo de un familiar</strong> para el pago inicial?',
+        opt_yes4: 'Sí', opt_no4: 'No',
+        q7_label: '¿Tiene <strong>préstamos estudiantiles</strong> que está pagando o pagará?',
+        opt_yes5: 'Sí', opt_no5: 'No',
+        q8_label: '¿Sus préstamos estudiantiles están siendo <strong>diferidos o trasladados</strong> por el prestamista?',
+        opt_yes6: 'Sí', opt_no6: 'No',
+        q9_label: '¿Tiene <strong>co-firmantes</strong> que usará o desea usar en el proceso de compra?',
+        opt_yes7: 'Sí', opt_no7: 'No',
+        q10_label: '¿Cuánto tiempo lleva trabajando con su empleador actual?', ph_tenure: 'Ej: 3 años, 8 meses',
+        q11_label: '¿Está trabajando actualmente?', opt_yes8: 'Sí', opt_no8: 'No',
+        q12_label: '¿Es tiempo completo o tiempo parcial?', opt_fulltime: 'Tiempo Completo', opt_parttime: 'Tiempo Parcial',
+        q13_label: '¿Ha tenido alguna vez una <strong>bancarrota</strong>?', opt_yes9: 'Sí', opt_no9: 'No', ph_bankruptcy: '¿Cuándo? (Ej: 2019)',
+        q16_label: '¿Le pagan con <strong>W2 o 1099</strong>?', opt_both: 'Ambos',
+        q20_label: '¿Es <strong>maestro/a</strong> y recibe cheques en el verano?', opt_yes10: 'Sí', opt_no10: 'No',
+        q17_label: '¿Tiene acceso a su <strong>banca en línea</strong>?', opt_yes11: 'Sí', opt_no11: 'No',
+        q18_label: '¿Conoce el número y/o correo de su <strong>departamento de Recursos Humanos</strong>?', opt_yes12: 'Sí', opt_no12: 'No', ph_hr: 'Teléfono y/o correo de RR.HH.',
+        q14_label: '💡 ¿Entiende que <strong>no todos califican</strong> para asistencia con el pago inicial?', opt_yes_und2: '✓ Sí, entiendo', opt_no13: 'No',
+        q15_label: '💡 ¿Entiende todos los <strong>pros y contras de la asistencia para el pago inicial</strong>?', opt_yes_und3: '✓ Sí, entiendo', opt_no14: 'No',
+        q19_label: '⚠️ ¿Entiende que <strong>no puede mover grandes cantidades de efectivo</strong> hacia o desde sus cuentas bancarias durante el proceso de compra sin hablar con el prestamista?', opt_yes_und4: '✓ Sí, entiendo', opt_no15: 'No',
+        q21_label: '📊 ¿Entiende que las <strong>tasas pueden cambiar en cualquier momento</strong> y todo se basa en su crédito o el crédito de otros en el préstamo?', opt_yes_und5: '✓ Sí, entiendo', opt_no16: 'No',
+        q22_label: '¿Quién estará en el <strong>título</strong> con usted?', ph_title: 'Ej: Cónyuge, Pareja, Nadie',
+        q23_label: '📋 ¿Entiende que su <strong>primera divulgación del prestamista siempre mostrará números extremadamente altos</strong> porque no se han tenido en cuenta los créditos y todos esos números son estimados?', opt_yes_und6: '✓ Sí, entiendo', opt_no17: 'No',
+        q24_label: '¿Hay algo que pueda <strong>afectar su capacidad de obtener un préstamo</strong>?',
+        q24_note: '¡Si es así, informe al prestamista — estamos en su equipo y nuestro objetivo es que entre a su hogar! 🏠',
+        ph_additional: 'Comparta cualquier información adicional aquí...',
+        btn_continue: 'Continuar', btn_continue2: 'Continuar', btn_continue3: 'Continuar',
+        btn_back: 'Atrás', btn_back2: 'Atrás', btn_back3: 'Atrás',
+        btn_submit: 'Completar Solicitud',
+        success_title: '¡Solicitud Completa! 🎉',
+        success_sub: 'Gracias por completar su Pre-Solicitud.<br>Descargue su copia PDF personalizada a continuación.',
+        btn_download: 'Descargar Copia PDF',
+        download_note: 'Su solicitud se guardará como archivo PDF',
+        footer_msg: 'Somos parte de su equipo 🏠',
+        footer_sub: '¡Nuestro objetivo es verle entrar en su nuevo hogar!',
+        page_footer: 'Andre Vargas Team • Pre-Solicitud • Toda la información se mantiene confidencial',
+        step_names: ['Info de Contacto', 'Propiedad y Financiamiento', 'Empleo', 'Reconocimientos'],
+        step_of: 'Paso',
+        step_of2: 'de',
+      }
+    };
+
+    let currentLang = 'en';
+    let currentStep = 1;
+    const totalSteps = 4;
+    let submittedData = {};
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+      const t = T[lang];
+      // Update all data-i18n elements
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) el.innerHTML = t[key];
+      });
+      // Update placeholders
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (t[key] !== undefined) el.placeholder = t[key];
+      });
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const t = T[currentLang];
+      const pct = Math.round((currentStep / totalSteps) * 100);
+      document.getElementById('prog-bar').style.width = pct + '%';
+      document.getElementById('prog-label').textContent = `${t.step_of} ${currentStep} ${t.step_of2} ${totalSteps} — ${t.step_names[currentStep-1]}`;
+      document.getElementById('prog-pct').textContent = pct + '%';
+      for (let i = 1; i <= totalSteps; i++) {
+        const dot = document.getElementById('dot-' + i);
+        const wrap = document.getElementById('wrap-' + i);
+        dot.classList.remove('active','done');
+        wrap.classList.remove('active','done');
+        if (i < currentStep) { dot.classList.add('done'); wrap.classList.add('done'); dot.textContent = '✓'; }
+        else if (i === currentStep) { dot.classList.add('active'); wrap.classList.add('active'); dot.textContent = i; }
+        else { dot.textContent = i; }
+      }
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      const el = document.getElementById('step-' + n) || document.getElementById('step-success');
+      if (el) el.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextStep() {
+      if (currentStep < totalSteps) {
+        currentStep++;
+        updateProgress();
+        showStep(currentStep);
+      }
+    }
+
+    function prevStep() {
+      currentStep--;
+      updateProgress();
+      showStep(currentStep);
+    }
+
+    function toggleCond(id, action) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (action === 'show') el.classList.add('visible');
+      else el.classList.remove('visible');
+    }
+
+    function getFormData() {
+      const form = document.getElementById('igas-form');
+      const data = {};
+      form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(el => {
+        if (el.name) data[el.name] = el.value;
+      });
+      [...new Set([...form.querySelectorAll('input[type="radio"]')].map(r => r.name))].forEach(name => {
+        const checked = form.querySelector(`input[type="radio"][name="${name}"]:checked`);
+        data[name] = checked ? checked.value : '';
+      });
+      [...new Set([...form.querySelectorAll('input[type="checkbox"]')].map(c => c.name))].forEach(name => {
+        const vals = [...form.querySelectorAll(`input[type="checkbox"][name="${name}"]:checked`)].map(c => c.value);
+        data[name] = vals.length ? vals.join(', ') : '';
+      });
+      data.submittedAt = new Date().toLocaleString();
+      return data;
+    }
+
+    function submitForm() {
+      submittedData = getFormData();
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-success').classList.add('active');
+      document.getElementById('hero-block').style.display = 'none';
+      document.getElementById('progress-block').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+      const d = submittedData;
+      const isEs = currentLang === 'es';
+      const navy = [15, 31, 61];
+      const navy2 = [26, 50, 96];
+      const gold = [212, 168, 67];
+      const lightGray = [244, 246, 250];
+      const darkGray = [70, 75, 95];
+      const pageW = 612;
+      const margin = 44;
+      const contentW = pageW - margin * 2;
+      let y = 0;
+
+      doc.setFillColor(...navy);
+      doc.rect(0, 0, pageW, 78, 'F');
+      doc.setFillColor(...gold);
+      doc.rect(0, 78, pageW, 4, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(20);
+      doc.text('Pre-Application', pageW / 2, 32, { align: 'center' });
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(180, 200, 255);
+      doc.text('Andre Vargas Team  •  info@andrevargasteam.com', pageW / 2, 50, { align: 'center' });
+      doc.text(`${isEs ? 'Enviado' : 'Submitted'}: ${d.submittedAt || 'N/A'}`, pageW / 2, 65, { align: 'center' });
+      y = 98;
+
+      function sectionHeader(title) {
+        if (y > 680) { doc.addPage(); y = 36; }
+        doc.setFillColor(...navy2);
+        doc.roundedRect(margin, y, contentW, 24, 3, 3, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.text(title.toUpperCase(), margin + 10, y + 16);
+        y += 30;
+      }
+
+      function row(label, value, highlight) {
+        const val = value || '—';
+        const lines = doc.splitTextToSize(val, contentW - 188);
+        const rowH = Math.max(24, lines.length * 14 + 10);
+        if (y + rowH > 730) { doc.addPage(); y = 36; }
+        doc.setFillColor(highlight ? 255 : lightGray[0], highlight ? 248 : lightGray[1], highlight ? 230 : lightGray[2]);
+        doc.rect(margin, y, contentW, rowH, 'F');
+        doc.setDrawColor(225, 228, 238);
+        doc.rect(margin, y, contentW, rowH, 'S');
+        if (highlight) {
+          doc.setFillColor(...gold);
+          doc.rect(margin, y, 3, rowH, 'F');
+        }
+        doc.setTextColor(...darkGray);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8.5);
+        doc.text(label, margin + 10, y + 15);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(30, 35, 55);
+        doc.text(lines, margin + 188, y + 15);
+        y += rowH + 3;
+      }
+
+      if (isEs) {
+        sectionHeader('1. Información de Contacto');
+        row('Nombre del Comprador', d.buyerName);
+        row('Correo Electrónico', d.buyerEmail);
+        row('Teléfono', d.phoneNumber);
+        row('Nombre del Agente', d.agentName);
+        y += 8;
+        sectionHeader('2. Propiedad y Financiamiento');
+        row('ITIN o SSN', d.q1_itin_or_ssn);
+        row('Tipos de Propiedad', d.q2_property_types);
+        row('Sin compras a crédito antes del cierre', d.q3_no_credit, true);
+        row('Fondos en banco +2 meses', d.q4_funds_in_account);
+        row('Efectivo fuera del banco', d.q5_cash_not_in_bank);
+        row('Regalo familiar para pago inicial', d.q6_gift_down_payment);
+        row('Préstamos estudiantiles', d.q7_student_loans);
+        if (d.q8_loans_deferred) row('Préstamos diferidos/trasladados', d.q8_loans_deferred);
+        row('Co-firmantes', d.q9_co_signers);
+        y += 8;
+        sectionHeader('3. Empleo e Historial');
+        row('Tiempo con empleador actual', d.q10_employer_tenure);
+        row('Trabaja actualmente', d.q11_working_now);
+        row('Tiempo completo o parcial', d.q12_employment_type);
+        row('Bancarrota previa', d.q13_bankruptcy);
+        if (d.q13_bankruptcy === 'Yes') row('Fecha de bancarrota', d.q13_bankruptcy_when);
+        row('Tipo de pago (W2/1099)', d.q16_pay_type);
+        row('Es maestro/a (pago verano)', d.q20_teacher);
+        row('Acceso a banca en línea', d.q17_online_banking);
+        row('Conoce contacto de RR.HH.', d.q18_hr_contact);
+        if (d.q18_hr_contact === 'Yes') row('Info de RR.HH.', d.q18_hr_contact_info);
+        y += 8;
+        sectionHeader('4. Reconocimientos y Detalles Finales');
+        row('No todos califican para asistencia', d.q14_dpa_understanding, true);
+        row('Pros y contras de la asistencia', d.q15_dpa_pros_cons, true);
+        row('Sin movimientos grandes de efectivo', d.q19_cash_movement, true);
+        row('Las tasas pueden cambiar', d.q21_rate_change, true);
+        row('Quién estará en el título', d.q22_title_with);
+        row('Primera divulgación del prestamista', d.q23_disclosure, true);
+        row('Info adicional / Preocupaciones', d.q24_additional_info);
+      } else {
+        sectionHeader('1. Contact Information');
+        row('Buyer Name', d.buyerName);
+        row('Email Address', d.buyerEmail);
+        row('Phone Number', d.phoneNumber);
+        row('Agent Name', d.agentName);
+        y += 8;
+        sectionHeader('2. Property & Financing');
+        row('ITIN or SSN', d.q1_itin_or_ssn);
+        row('Property Types Interested In', d.q2_property_types);
+        row('Understands No Credit Before Close', d.q3_no_credit, true);
+        row('Funds in Bank > 2 Months', d.q4_funds_in_account);
+        row('Using Cash Not in Bank', d.q5_cash_not_in_bank);
+        row('Gift from Family for Down Payment', d.q6_gift_down_payment);
+        row('Has Student Loans', d.q7_student_loans);
+        if (d.q8_loans_deferred) row('Student Loans Deferred/Moved', d.q8_loans_deferred);
+        row('Will Use Co-Signers', d.q9_co_signers);
+        y += 8;
+        sectionHeader('3. Employment & History');
+        row('Time at Current Employer', d.q10_employer_tenure);
+        row('Currently Working', d.q11_working_now);
+        row('Full Time or Part Time', d.q12_employment_type);
+        row('Had Bankruptcy', d.q13_bankruptcy);
+        if (d.q13_bankruptcy === 'Yes') row('Bankruptcy Date', d.q13_bankruptcy_when);
+        row('Pay Type (W2 / 1099)', d.q16_pay_type);
+        row('Is a Teacher (Summer Pay)', d.q20_teacher);
+        row('Has Online Banking Access', d.q17_online_banking);
+        row('Knows HR Contact Info', d.q18_hr_contact);
+        if (d.q18_hr_contact === 'Yes') row('HR Contact Details', d.q18_hr_contact_info);
+        y += 8;
+        sectionHeader('4. Acknowledgments & Final Details');
+        row('Understands Not All Qualify for DPA', d.q14_dpa_understanding, true);
+        row('Understands DPA Pros & Cons', d.q15_dpa_pros_cons, true);
+        row('Understands No Large Cash Movements', d.q19_cash_movement, true);
+        row('Understands Rates Can Change', d.q21_rate_change, true);
+        row('Who Will Be on Title', d.q22_title_with);
+        row('Understands First Lender Disclosure', d.q23_disclosure, true);
+        row('Additional Info / Concerns', d.q24_additional_info);
+      }
+      y += 14;
+
+      if (y > 700) { doc.addPage(); y = 36; }
+      doc.setFillColor(...navy);
+      doc.roundedRect(margin, y, contentW, 42, 4, 4, 'F');
+      doc.setFillColor(...gold);
+      doc.roundedRect(margin, y, 4, 42, 2, 2, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      const footerMsg = isEs ? 'Somos parte de su equipo 🏠  —  ¡Nuestro objetivo es verle entrar en su nuevo hogar!' : 'We are part of your team 🏠  —  Our goal is to see you get into your new home!';
+      doc.text(footerMsg, pageW / 2, y + 16, { align: 'center' });
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(170, 190, 255);
+      doc.setFontSize(8);
+      doc.text('Andre Vargas Team  •  info@andrevargasteam.com  •  ' + (isEs ? 'Información confidencial' : 'All information is kept confidential'), pageW / 2, y + 30, { align: 'center' });
+
+      const name = (d.buyerName || 'Buyer').replace(/\s+/g, '_');
+      doc.save(`Pre_Application_${name}.pdf`);
+    }
+
+    // Checkbox label toggle
+    document.addEventListener('change', function(e) {
+      if (e.target.type === 'checkbox') {
+        const lbl = e.target.nextElementSibling;
+        if (lbl) {
+          lbl.style.borderColor = e.target.checked ? 'var(--gold)' : '';
+          lbl.style.background = e.target.checked ? '#fff8e8' : '';
+          lbl.style.color = e.target.checked ? 'var(--navy)' : '';
+          lbl.style.boxShadow = e.target.checked ? '0 0 0 3px rgba(212,168,67,.12)' : '';
+        }
+      }
+    });
+
+    // Init
+    setLang('en');
+  </script>
+</body>
+</html>
